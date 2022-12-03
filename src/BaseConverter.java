@@ -1,8 +1,13 @@
+import java.awt.*;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-//FFileChooser to choose which file to run with
+
+
+//JFileChooser to choose which file to run with
 
 
 /**
@@ -15,6 +20,7 @@ public class BaseConverter {
 
     /**
      * Convert a String num in fromBase to base-10 int.
+     *
      * @param num      the original number
      * @param fromBase the original from base
      * @return a base-10 int of num base fromBase
@@ -37,14 +43,12 @@ public class BaseConverter {
     }
 
     /**
-     * Javadoc me
-     *
-     * @param num the original number
+     * @param num    the original number
      * @param toBase the base you want to convert to
      * @return returns the converted number or 0
      */
     public String intToStr(int num, int toBase) {
-        if(num == 0)
+        if (num == 0)
             return "0";
         String toNum = new String();
         while (num > 0) {
@@ -60,53 +64,68 @@ public class BaseConverter {
     public void inputConvertPrintWrite() {
         Scanner in = null;
         PrintWriter out = null;
-        try {
-            in = new Scanner(new File("datafiles/values30.dat"));
-            out = new PrintWriter(new File("datafiles/converted.dat"));
-            String[] line;
-            String output;
-            while (in.hasNext()) {
-                line = in.nextLine().split("\t");
-                // TO WRITE TO THE FILE:
-                // write original number    -STRING
-                // tab
-                // write original base  -STRING
-                // tab
-                // write the converted number
-                // tab
-                // write the toBase     -STRING
-                if (Integer.parseInt(line[1]) < 2 || Integer.parseInt(line[1]) > 16)
-                    System.out.println("Invalid input base " + line[1]);
-                else if (Integer.parseInt(line[2]) < 2 || Integer.parseInt(line[2]) > 16)
-                    System.out.println("Invalid output base " + line[2]);
-                else {
-                    output = intToStr(strToInt(line[0], line[1]), Integer.parseInt(line[2]));
-                    out.println(line[0] + "\t" + line[1] + "\t" + output + "\t" + line[2]);
-                    System.out.println(line[0] + " base " + line[1] + " = " + output + " base " + line[2]);
-                    //System.out.println(line[0]);    // String num
-                    //System.out.println(line[1]);    // String fromBase
-                    //System.out.println(line[2]);    // String toBase
+        File HereIAm = new File("datafiles");
+        JFileChooser j = new JFileChooser(HereIAm);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "dat & txt files", "dat", "txt");
+        j.setFileFilter(filter);
+        Component parent = null;
+        int returnVal = j.showOpenDialog(parent);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: " +
+                    j.getSelectedFile().getName());
+            try {
+                in = new Scanner(new File(j.getSelectedFile().toURI()));
+                out = new PrintWriter(new File("datafiles/converted.dat"));
+                String[] line;
+                String output;
+                while (in.hasNext()) {
+                    line = in.nextLine().split("\t");
+                    // TO WRITE TO THE FILE:
+                    // write original number    -STRING
+                    // tab
+                    // write original base  -STRING
+                    // tab
+                    // write the converted number
+                    // tab
+                    // write the toBase     -STRING
+                    if (Integer.parseInt(line[1]) < 2 || Integer.parseInt(line[1]) > 16)
+                        System.out.println("Invalid input base " + line[1]);
+                    else if (Integer.parseInt(line[2]) < 2 || Integer.parseInt(line[2]) > 16)
+                        System.out.println("Invalid output base " + line[2]);
+                    else {
+                        output = intToStr(strToInt(line[0], line[1]), Integer.parseInt(line[2]));
+                        out.println(line[0] + "\t" + line[1] + "\t" + output + "\t" + line[2]);
+                        System.out.println(line[0] + " base " + line[1] + " = " + output + " base " + line[2]);
+                        //System.out.println(line[0]);    // String num
+                        //System.out.println(line[1]);    // String fromBase
+                        //System.out.println(line[2]);    // String toBase
+                    }
                 }
-            }
                 if (out != null)
                     out.close();
                 if (in != null)
                     in.close();
 
-        }
-        catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Something bad happened. Details here: " + e.toString());
             }
         }
+    }
+
+
+    /**
+     * Main method of the BaseConverter class
+     *
+     * @param args Command line arguments if needed
+     */
+    public static void main(String[] args) {
+        BaseConverter bc = new BaseConverter();
+        bc.inputConvertPrintWrite();
 
 
 
-        /**
-         * Main method of the BaseConverter class
-         * @param args Command line arguments if needed
-         */
-        public static void main (String[]args){
-            BaseConverter bc = new BaseConverter();
-            bc.inputConvertPrintWrite();
+
+
         }
     }
