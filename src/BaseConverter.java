@@ -64,6 +64,12 @@ public class BaseConverter {
     public void inputConvertPrintWrite() {
         Scanner in = null;
         PrintWriter out = null;
+        // help from https://docs.oracle.com/javase/7/docs/api/javax/swing/JFileChooser.html
+        // https://www.geeksforgeeks.org/java-swing-jfilechooser/#:~:text=JFileChooser%20is%20a%20part%20of,%2C%20panels%2C%20dialogs%2C%20etc%20.
+        // http://www.java2s.com/Tutorial/Java/0240__Swing/UsingJFileChooser.htm
+        // https://mkyong.com/swing/java-swing-jfilechooser-example/
+        // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
+        // ryan aided a tiny bit with this
         File HereIAm = new File("datafiles");
         JFileChooser j = new JFileChooser(HereIAm);
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -72,8 +78,6 @@ public class BaseConverter {
         Component parent = null;
         int returnVal = j.showOpenDialog(parent);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("You chose to open this file: " +
-                    j.getSelectedFile().getName());
             try {
                 in = new Scanner(new File(j.getSelectedFile().toURI()));
                 out = new PrintWriter(new File("datafiles/converted.dat"));
@@ -127,5 +131,5 @@ public class BaseConverter {
 
 
 
-        }
     }
+}
